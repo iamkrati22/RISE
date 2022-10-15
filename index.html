@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="main__bg"></div>
+<div class="main__bg layer1">
+
+</div>
+<div class="main__bg layer2">
+</div>
+    <div class="title">
+        <h3>Reverse Image Search Engine</h3>
+    </div>
+    <div class="main-section">
+        <div class="left">
+            <h2>File Upload & Image Preview</h2>
+            <p class="lead">Search an Image <b>Using an image</b></p>
+
+            <!-- Upload  -->
+            <form id="file-upload-form" class="uploader" method="POST" onsubmit="abc()">
+            <div class="uploader">
+                <input id="file-upload" type="file" name="file-upload" accept="image/*" />
+
+                <label for="file-upload" id="file-drag">
+                    <img id="file-image" src="#" alt="Preview" class="hidden">
+                    <div id="start">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <div>Select a file or drag here</div>
+                        <div id="notimage" class="hidden">Please select an image</div>
+                        <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+                    </div>
+                    <div id="response" class="hidden">
+                        <div id="messages"></div>
+                        <progress class="progress" id="file-progress" value="0">
+                            <span>0</span>%
+                        </progress>
+                    </div>
+                    <br></br>
+                    <div class="box">
+                        <div class="loading-dock">
+                            <svg id="load-b" x="0px" y="0px" viewBox="0 0 150 150">
+                            <circle class="loading-inner" cx="75" cy="75" r="60"/>
+                         </svg>
+                          <svg id="load" x="0px" y="0px" viewBox="0 0 150 150">
+                            <circle class="loading-inner" cx="75" cy="75" r="60"/>
+                         </svg>
+                         <button type="submit" id="test" class="submit">Submit</button>
+                          <svg id="check" style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="#FFFFFF" d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+                        </svg>
+                        </div>
+                    </div>
+                    <!-- Inspired by this dribbble post by Colin Garvin https://dribbble.com/shots/1426764-Submit-Button -->
+
+                </label>
+            </div>
+            </form>
+        </div>
+        <div id="right">
+            <h2>Best Match</h2>
+            <div class="res">
+                <img src="./images/1.jpeg" alt="">
+            </div>
+              
+        </div>
+
+    </div>
+</body>
+<script src="script.js"></script>
+<script>
+    async function abc(){
+        const response=await fetch('http://54.152.25.130:5000/', {
+            method:'POST',
+            body: document.getElementById('file-upload'),
+            redirect: "follow"
+        });
+        const data=await response.json();
+        console.log(data, 'is here');
+    }
+
+    document.getElementById("test").addEventListener("click", async () => {
+        event.preventDefault();
+        // const response=await fetch('http://54.152.25.130:5000/', {
+        //     method:'POST',
+        //     body: document.getElementById('file-upload')
+        // });
+        // const data=await response.json();
+        // console.log(data, 'is here');
+        const results = document.getElementById("right");
+        console.log(results.style.display);
+        if (results.style.display == "") {
+            results.style.display = "flex";
+        }
+    });
+</script>
+<script>
+    var clicked = false;
+var submit = document.querySelector('.submit');
+submit.addEventListener("click", function(){
+  // Make sure user cannot click button again until it has been reset
+  if( !clicked ){
+    clicked = true;
+    submit.classList.remove("return");
+    submit.blur();
+    document.querySelector('.loading-dock').classList.add('loaded');
+    document.getElementById('load').style.display= 'initial';
+    document.getElementById('load-b').style.display= 'initial';
+    setTimeout(function(){
+      document.getElementById('load').style.opacity = 1;
+    }, 750);
+    setTimeout(function(){
+      document.getElementById('load-b').style.opacity = 1;
+    }, 900);
+    setTimeout(function(){
+      document.querySelector('.loading-dock').classList.remove('loaded');
+      document.getElementById('load').style.display = 'none';
+      document.getElementById('load-b').style.display = 'none';
+      document.getElementById('load').style.opacity = 0;
+      document.getElementById('load-b').style.opacity = 0;
+      let submit = document.querySelector('.submit');
+      submit.classList.add("popout");
+      submit.innerHTML = "";
+      setTimeout(function(){
+      document.getElementById('check').style.display = "block";
+      }, 300);
+    }, 3600);
+
+    //reset all
+    setTimeout(function(){
+      submit.classList.remove("popout");
+      submit.classList.add("return");
+      submit.innerHTML = "Submit";
+      document.getElementById('check').style.display = "none";
+      clicked = false;
+    }, 5300);
+  }
+})
+</script>
+
+</html>
